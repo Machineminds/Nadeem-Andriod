@@ -113,6 +113,8 @@
     <string name="toolbar_header_wallet">我的钱包</string>
     <string name="toolbar_header_settings">我的设置</string>
     <string name="toolbar_header_help">帮助</string>
+    <string name="toolbar_header_contact_us">联系我们</string>
+    <string name="toolbar_header_clear_browser_cache">清除浏览器缓存</string>
     <string name="toolbar_header_transactions">我的账单</string>
     <string name="settings_my_wallet_address">我的钱包地址</string>
     <string name="settings_notification">通知设置</string>

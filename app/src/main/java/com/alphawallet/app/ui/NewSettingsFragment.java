@@ -3,6 +3,7 @@ package com.alphawallet.app.ui;
 
 import android.Manifest;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -35,6 +36,8 @@ import com.alphawallet.app.viewmodel.NewSettingsViewModel;
 import com.alphawallet.app.viewmodel.NewSettingsViewModelFactory;
 import com.alphawallet.app.widget.AWalletConfirmationDialog;
 import com.crashlytics.android.Crashlytics;
+
+import java.io.File;
 
 import static com.alphawallet.app.C.*;
 import static com.alphawallet.app.C.Key.WALLET;
@@ -73,6 +76,8 @@ public class NewSettingsFragment extends Fragment
         viewModel.defaultWallet().observe(this, this::onDefaultWallet);
         viewModel.backUpMessage().observe(this, this::backupWarning);
         viewModel.setLocale(getContext());
+
+
 
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
 
@@ -159,6 +164,12 @@ public class NewSettingsFragment extends Fragment
         final LinearLayout layoutHelp = view.findViewById(R.id.layout_help_faq);
         layoutHelp.setOnClickListener(v -> {
             viewModel.showHelp(getContext());
+        });
+
+        final LinearLayout layoutClearBrowserCache = view.findViewById(R.id.layout_clear_browser_cache);
+        layoutClearBrowserCache.setOnClickListener(v -> {
+            deleteBrowserCache(getContext());
+            Toast.makeText(getContext(), "Browser Cache Cleared", Toast.LENGTH_SHORT).show();
         });
 
         final LinearLayout layoutTelegram = view.findViewById(R.id.layout_telegram);
@@ -537,6 +548,30 @@ public class NewSettingsFragment extends Fragment
             backupMenuButton.setOnClickListener(v -> {
                 showPopup(backupPopupAnchor, wallet.address);
             });
+        }
+    }
+
+    public static void deleteBrowserCache(Context context) {
+        try {
+            File dir = context.getCacheDir();
+            deleteDir(dir);
+        } catch (Exception e) { e.printStackTrace();}
+    }
+
+    public static boolean deleteDir(File dir) {
+        if (dir != null && dir.isDirectory()) {
+            String[] directory = dir.list();
+            for (int i = 0; i < directory.length; i++) {
+                boolean success = deleteDir(new File(dir, directory[i]));
+                if (!success) {
+                    return false;
+                }
+            }
+            return dir.delete();
+        } else if(dir!= null && dir.isFile()) {
+            return dir.delete();
+        } else {
+            return false;
         }
     }
 
